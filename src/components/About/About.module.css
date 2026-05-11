@@ -1,0 +1,114 @@
+.section {
+  background: var(--surface);
+  padding: 72px 0;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.text h2 {
+  margin-bottom: 0;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--muted);
+  transition: all var(--transition);
+  cursor: default;
+}
+
+.pill:hover {
+  border-color: var(--blue);
+  color: var(--text);
+}
+
+.visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 320px;
+}
+
+.rings {
+  position: relative;
+  width: 220px;
+  height: 220px;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid;
+  animation: spin linear infinite;
+}
+
+.ring1 {
+  inset: 0;
+  border-color: rgba(79,142,247,0.3);
+  animation-duration: 20s;
+}
+
+.ring2 {
+  inset: 22px;
+  border-color: rgba(0,229,204,0.25);
+  animation-duration: 15s;
+  animation-direction: reverse;
+}
+
+.ring3 {
+  inset: 44px;
+  border-color: rgba(124,92,252,0.2);
+  animation-duration: 10s;
+}
+
+.ringCenter {
+  position: absolute;
+  inset: 66px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 0 40px rgba(79,142,247,0.3);
+}
+
+.ringDot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--blue);
+  border-radius: 50%;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px var(--blue);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@media (max-width: 680px) {
+  .inner { grid-template-columns: 1fr; }
+  .visual { display: none; }
+}

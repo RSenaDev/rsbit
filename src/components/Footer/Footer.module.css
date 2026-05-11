@@ -1,0 +1,47 @@
+.footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.logoAccent {
+  color: var(--blue);
+}
+
+.copy {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.links a {
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.links a:hover {
+  color: var(--text);
+}
