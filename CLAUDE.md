@@ -2,6 +2,21 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## GitHub Repository
+
+This project is hosted at **https://github.com/RSenaDev/rsbit**.
+
+### Auto-sync com GitHub
+
+Após cada resposta do Claude, um hook `Stop` executa automaticamente:
+1. `git add .` — staged todas as alterações
+2. Verifica se há algo a commitar (`git diff --cached`)
+3. Se sim: faz commit com timestamp e push para `origin master`
+
+O hook está configurado em `.claude/settings.json`. Para editar ou desabilitar, abra `/hooks` no Claude Code.
+
+Para push manual: `git push origin master`
+
 ## Commands
 
 ```bash
