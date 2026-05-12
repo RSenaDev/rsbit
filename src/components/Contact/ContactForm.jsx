@@ -1,7 +1,5 @@
-import { useState } from 'react';
+import { useForm, ValidationError } from '@formspree/react';
 import styles from './Contact.module.css';
-
-const FORMSPREE_ID = 'YOUR_FORM_ID'; // substitua pelo seu ID do Formspree
 
 const SERVICE_OPTIONS = [
   'Suporte & Helpdesk',
@@ -12,26 +10,18 @@ const SERVICE_OPTIONS = [
 ];
 
 export default function ContactForm() {
-  const [status, setStatus] = useState('idle'); // 'idle' | 'sending' | 'sent' | 'error'
+  const [state, handleSubmit] = useForm('xpqbboae');
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setStatus('sending');
-
-    try {
-      const response = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-        method: 'POST',
-        body: new FormData(e.target),
-        headers: { Accept: 'application/json' },
-      });
-
-      setStatus(response.ok ? 'sent' : 'error');
-    } catch {
-      setStatus('error');
-    }
+  if (state.succeeded) {
+    return (
+      <div className={styles.form}>
+        <h3>Enviar mensagem</h3>
+        <div className={styles.success}>
+          ✅ Mensagem enviada! Responderei em breve.
+        </div>
+      </div>
+    );
   }
-
-  const sent = status === 'sent';
 
   return (
     <div className={styles.form}>
@@ -39,15 +29,17 @@ export default function ContactForm() {
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
           <label>Nome</label>
-          <input name="nome" type="text" placeholder="Seu nome completo" required disabled={sent} />
+          <input name="nome" type="text" placeholder="Seu nome completo" required disabled={state.submitting} />
+          <ValidationError field="nome" errors={state.errors} className={styles.fieldError} />
         </div>
         <div className={styles.formGroup}>
           <label>E-mail</label>
-          <input name="email" type="email" placeholder="seu@email.com" required disabled={sent} />
+          <input name="email" type="email" placeholder="seu@email.com" required disabled={state.submitting} />
+          <ValidationError field="email" errors={state.errors} className={styles.fieldError} />
         </div>
         <div className={styles.formGroup}>
           <label>Serviço de interesse</label>
-          <select name="servico" disabled={sent}>
+          <select name="servico" disabled={state.submitting}>
             <option value="">Selecione um serviço</option>
             {SERVICE_OPTIONS.map((opt) => (
               <option key={opt}>{opt}</option>
@@ -56,31 +48,19 @@ export default function ContactForm() {
         </div>
         <div className={styles.formGroup}>
           <label>Mensagem</label>
-          <textarea name="mensagem" placeholder="Descreva seu projeto ou problema..." disabled={sent} />
+          <textarea name="mensagem" placeholder="Descreva seu projeto ou problema..." disabled={state.submitting} />
+          <ValidationError field="mensagem" errors={state.errors} className={styles.fieldError} />
         </div>
 
         <button
           type="submit"
           className={`btn btn-primary ${styles.submitBtn}`}
-          disabled={status !== 'idle'}
-          style={sent ? { background: 'var(--teal)' } : {}}
+          disabled={state.submitting}
         >
-          {status === 'idle'    && 'Enviar mensagem ✈'}
-          {status === 'sending' && 'Enviando...'}
-          {status === 'sent'    && 'Enviado ✓'}
-          {status === 'error'   && 'Tentar novamente'}
+          {state.submitting ? 'Enviando...' : 'Enviar mensagem ✈'}
         </button>
 
-        {sent && (
-          <div className={styles.success}>
-            ✅ Mensagem enviada! Responderei em breve.
-          </div>
-        )}
-        {status === 'error' && (
-          <div className={styles.error}>
-            ❌ Erro ao enviar. Tente novamente ou entre em contato diretamente.
-          </div>
-        )}
+        <ValidationError errors={state.errors} className={styles.error} />
       </form>
     </div>
   );

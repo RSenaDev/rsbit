@@ -183,6 +183,13 @@
   margin-top: 12px;
 }
 
+.fieldError {
+  color: #ff5050;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
+}
+
 @media (max-width: 680px) {
   .wrap { grid-template-columns: 1fr; }
 }
