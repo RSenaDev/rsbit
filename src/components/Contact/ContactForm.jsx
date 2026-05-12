@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styles from './Contact.module.css';
 
+const FORMSPREE_ID = 'YOUR_FORM_ID'; // substitua pelo seu ID do Formspree
+
 const SERVICE_OPTIONS = [
   'Suporte & Helpdesk',
   'Desenvolvimento Web',
@@ -10,13 +12,26 @@ const SERVICE_OPTIONS = [
 ];
 
 export default function ContactForm() {
-  const [status, setStatus] = useState('idle'); // 'idle' | 'sending' | 'sent'
+  const [status, setStatus] = useState('idle'); // 'idle' | 'sending' | 'sent' | 'error'
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setStatus('sending');
-    setTimeout(() => setStatus('sent'), 1200);
+
+    try {
+      const response = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST',
+        body: new FormData(e.target),
+        headers: { Accept: 'application/json' },
+      });
+
+      setStatus(response.ok ? 'sent' : 'error');
+    } catch {
+      setStatus('error');
+    }
   }
+
+  const sent = status === 'sent';
 
   return (
     <div className={styles.form}>
@@ -24,15 +39,15 @@ export default function ContactForm() {
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
           <label>Nome</label>
-          <input type="text" placeholder="Seu nome completo" required disabled={status === 'sent'} />
+          <input name="nome" type="text" placeholder="Seu nome completo" required disabled={sent} />
         </div>
         <div className={styles.formGroup}>
           <label>E-mail</label>
-          <input type="email" placeholder="seu@email.com" required disabled={status === 'sent'} />
+          <input name="email" type="email" placeholder="seu@email.com" required disabled={sent} />
         </div>
         <div className={styles.formGroup}>
           <label>Serviço de interesse</label>
-          <select disabled={status === 'sent'}>
+          <select name="servico" disabled={sent}>
             <option value="">Selecione um serviço</option>
             {SERVICE_OPTIONS.map((opt) => (
               <option key={opt}>{opt}</option>
@@ -41,23 +56,29 @@ export default function ContactForm() {
         </div>
         <div className={styles.formGroup}>
           <label>Mensagem</label>
-          <textarea placeholder="Descreva seu projeto ou problema..." disabled={status === 'sent'} />
+          <textarea name="mensagem" placeholder="Descreva seu projeto ou problema..." disabled={sent} />
         </div>
 
         <button
           type="submit"
           className={`btn btn-primary ${styles.submitBtn}`}
           disabled={status !== 'idle'}
-          style={status === 'sent' ? { background: 'var(--teal)' } : {}}
+          style={sent ? { background: 'var(--teal)' } : {}}
         >
           {status === 'idle'    && 'Enviar mensagem ✈'}
           {status === 'sending' && 'Enviando...'}
           {status === 'sent'    && 'Enviado ✓'}
+          {status === 'error'   && 'Tentar novamente'}
         </button>
 
-        {status === 'sent' && (
+        {sent && (
           <div className={styles.success}>
             ✅ Mensagem enviada! Responderei em breve.
+          </div>
+        )}
+        {status === 'error' && (
+          <div className={styles.error}>
+            ❌ Erro ao enviar. Tente novamente ou entre em contato diretamente.
           </div>
         )}
       </form>

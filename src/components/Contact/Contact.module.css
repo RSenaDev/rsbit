@@ -172,6 +172,17 @@
   margin-top: 12px;
 }
 
+.error {
+  text-align: center;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(255,80,80,0.08);
+  border: 1px solid rgba(255,80,80,0.2);
+  color: #ff5050;
+  font-size: 0.9rem;
+  margin-top: 12px;
+}
+
 @media (max-width: 680px) {
   .wrap { grid-template-columns: 1fr; }
 }
